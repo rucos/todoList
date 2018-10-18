@@ -20,7 +20,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::group(['prefix' => '/v1', 'namespace' => 'Api\V1', 'as' => 'api.'], function () {
     Route::resource('todoList', 'TodoListController', ['except' => ['create', 'edit']]);
-    Route::get('todoList/find/{str}', 'TodoListController@findTodoList');
+    Route::get('todoList/find/{str}/{complete}', 'TodoListController@findTodoList');
 });
 
 

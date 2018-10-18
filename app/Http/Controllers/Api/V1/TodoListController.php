@@ -50,12 +50,20 @@ class TodoListController extends Controller
         return TodoList::findOrFail($id);
     }
 
-    public function findTodoList($str) {
+    public function findTodoList($str, $complete) {
         if($str == false) {
             return $this->index();
         }
+        $arrWhere = [
+            ['name', 'like', $str.'%']
+        ];
+
+        if($complete == 1) {
+            $arrWhere[] = array('complete', '=', 1);
+        }
+
         $query = TodoList::query();
-        return $query->where('name', 'like', $str.'%')->get();
+        return $query->where($arrWhere)->get();
     }
 
     /**

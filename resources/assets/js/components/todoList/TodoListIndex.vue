@@ -7,6 +7,7 @@
             <input type="text" v-model="searchStr" placeholder="Enter you search task" />
             <button type="button" class="btn btn-primary btn-sm" v-on:click="onClickStrSearch()">Find</button>
             <button type="button" class="btn btn-info btn-sm" v-on:click="onClickResetBtn()">Reset</button>
+            <input type="checkbox" v-model="checkCompleteOnly">Find only complete
         </div>
 
         <div class="panel panel-default">
@@ -49,7 +50,8 @@
         data: function () {
             return {
                 todoList: [],
-                searchStr: ''
+                searchStr: '',
+                checkCompleteOnly: 1
             }
         },
         mounted() {
@@ -84,7 +86,7 @@
                     return;
                 }
                 let app = this;
-                axios.get('/api/v1/todoList/find/' + this.searchStr)
+                axios.get('/api/v1/todoList/find/' + this.searchStr + '/' + +this.checkCompleteOnly)
                     .then(function (resp) {
                         app.todoList = resp.data;
                     })
@@ -95,6 +97,7 @@
             },
             onClickResetBtn() {
                 this.searchStr = '';
+                this.checkCompleteOnly = 1;
                 this.onClickStrSearch();
             },
             onChangeComlete(id, index, complete) {

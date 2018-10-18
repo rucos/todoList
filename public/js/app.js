@@ -45930,12 +45930,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
         return {
             todoList: [],
-            searchStr: ''
+            searchStr: '',
+            checkCompleteOnly: 1
         };
     },
     mounted: function mounted() {
@@ -45967,7 +45969,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 return;
             }
             var app = this;
-            axios.get('/api/v1/todoList/find/' + this.searchStr).then(function (resp) {
+            axios.get('/api/v1/todoList/find/' + this.searchStr + '/' + +this.checkCompleteOnly).then(function (resp) {
                 app.todoList = resp.data;
             }).catch(function (resp) {
                 console.log(resp);
@@ -45976,6 +45978,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         onClickResetBtn: function onClickResetBtn() {
             this.searchStr = '';
+            this.checkCompleteOnly = 1;
             this.onClickStrSearch();
         },
         onChangeComlete: function onChangeComlete(id, index, complete) {
@@ -46069,7 +46072,46 @@ var render = function() {
           }
         },
         [_vm._v("Reset")]
-      )
+      ),
+      _vm._v(" "),
+      _c("input", {
+        directives: [
+          {
+            name: "model",
+            rawName: "v-model",
+            value: _vm.checkCompleteOnly,
+            expression: "checkCompleteOnly"
+          }
+        ],
+        attrs: { type: "checkbox" },
+        domProps: {
+          checked: Array.isArray(_vm.checkCompleteOnly)
+            ? _vm._i(_vm.checkCompleteOnly, null) > -1
+            : _vm.checkCompleteOnly
+        },
+        on: {
+          change: function($event) {
+            var $$a = _vm.checkCompleteOnly,
+              $$el = $event.target,
+              $$c = $$el.checked ? true : false
+            if (Array.isArray($$a)) {
+              var $$v = null,
+                $$i = _vm._i($$a, $$v)
+              if ($$el.checked) {
+                $$i < 0 && (_vm.checkCompleteOnly = $$a.concat([$$v]))
+              } else {
+                $$i > -1 &&
+                  (_vm.checkCompleteOnly = $$a
+                    .slice(0, $$i)
+                    .concat($$a.slice($$i + 1)))
+              }
+            } else {
+              _vm.checkCompleteOnly = $$c
+            }
+          }
+        }
+      }),
+      _vm._v("Find only complete\n    ")
     ]),
     _vm._v(" "),
     _c("div", { staticClass: "panel panel-default" }, [
