@@ -1,10 +1,7 @@
 <template>
     <div>
         <div class="form-group">
-            <a href="#"
-               class="btn btn-xs btn-danger">
-                Append
-            </a>
+            <router-link :to="{name: 'createTodoList'}" class="btn btn-success">Create</router-link>
         </div>
 
         <div class="panel panel-default">
@@ -24,10 +21,9 @@
                     <td>{{ todoList.date }}</td>
                     <td>{{ todoList.complete }}</td>
                     <td>
-                        <a href="#"
-                           class="btn btn-xs btn-danger">
+                        <router-link :to="{name: 'editTodoList', params: {id: todoList.id}}" class="btn btn-xs btn-default">
                             Edit
-                        </a>
+                        </router-link>
                         <a href="#"
                            class="btn btn-xs btn-danger">
                             Delete

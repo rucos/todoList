@@ -11,9 +11,11 @@ require('./bootstrap');
 window.Vue = require('vue');
 
 import VueRouter from 'vue-router';
-window.Vue.use(VueRouter);
 import TodoListIndex from './components/todoList/TodoListIndex.vue';
+import TodoListCreate from './components/todoList/TodoListCreate.vue';
+import TodoListEdit from './components/todoList/TodoListEdit.vue';
 
+window.Vue.use(VueRouter);
 
 const routes = [
     {
@@ -21,7 +23,16 @@ const routes = [
         components: {
             todoListIndex: TodoListIndex
         }
-    }
+    },
+    {
+        path: '/create',
+        component: TodoListCreate,
+        name: 'createTodoList'
+    },
+    {
+        path: '/edit/:id',
+        component: TodoListEdit,
+        name: 'editTodoList'}
 ]
 
 const router = new VueRouter({ routes })
