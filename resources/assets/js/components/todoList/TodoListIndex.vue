@@ -16,7 +16,7 @@
                     <th>Name task</th>
                     <th>Date</th>
                     <th>Complete</th>
-                    <th width="100">&nbsp;</th>
+                    <th width="120">&nbsp;</th>
 
                 </tr>
                 </thead>
@@ -60,7 +60,7 @@
                 let app = this;
                 axios.get('/api/v1/todoList')
                     .then(function (resp) {
-                        app.todoList = resp.data;
+                        app.sortCompleteTodo(resp.data);
                     })
                     .catch(function (resp) {
                         alert("Could not load task");
@@ -98,15 +98,22 @@
                 this.onClickStrSearch();
             },
             onChangeComlete(id, index, complete) {
+                let app = this;
                 this.todoList[index].complete = !complete;
                 axios.patch('/api/v1/todoList/' + id, this.todoList[index])
                     .then(function (resp) {
-
+                        app.sortCompleteTodo(app.todoList);
                     })
                     .catch(function (resp) {
                         console.log(resp);
                         alert("Could not edit");
                     });
+            },
+            sortCompleteTodo(data) {
+                this.todoList = data.sort(function(el){
+                    return el.complete ? 1 : 0;
+                });
+
             }
         }
     }

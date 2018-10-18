@@ -45946,7 +45946,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         getTodoList: function getTodoList() {
             var app = this;
             axios.get('/api/v1/todoList').then(function (resp) {
-                app.todoList = resp.data;
+                app.sortCompleteTodo(resp.data);
             }).catch(function (resp) {
                 alert("Could not load task");
             });
@@ -45979,10 +45979,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.onClickStrSearch();
         },
         onChangeComlete: function onChangeComlete(id, index, complete) {
+            var app = this;
             this.todoList[index].complete = !complete;
-            axios.patch('/api/v1/todoList/' + id, this.todoList[index]).then(function (resp) {}).catch(function (resp) {
+            axios.patch('/api/v1/todoList/' + id, this.todoList[index]).then(function (resp) {
+                app.sortCompleteTodo(app.todoList);
+            }).catch(function (resp) {
                 console.log(resp);
                 alert("Could not edit");
+            });
+        },
+        sortCompleteTodo: function sortCompleteTodo(data) {
+            this.todoList = data.sort(function (el) {
+                return el.complete ? 1 : 0;
             });
         }
     }
@@ -46183,7 +46191,7 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", [_vm._v("Complete")]),
         _vm._v(" "),
-        _c("th", { attrs: { width: "100" } }, [_vm._v(" ")])
+        _c("th", { attrs: { width: "120" } }, [_vm._v(" ")])
       ])
     ])
   }
