@@ -25,7 +25,8 @@
                             Edit
                         </router-link>
                         <a href="#"
-                           class="btn btn-xs btn-danger">
+                           class="btn btn-xs btn-danger"
+                           v-on:click="deleteCurrentRow(todoList.id, index)">
                             Delete
                         </a>
                     </td>
@@ -50,12 +51,22 @@
                     app.todoList = resp.data;
                 })
                 .catch(function (resp) {
-                    console.log(resp);
                     alert("Could not load task");
                 });
         },
         methods: {
-
+            deleteCurrentRow(id, index) {
+                if (confirm("Do you really want to delete it?")) {
+                    var app = this;
+                    axios.delete('/api/v1/todoList/' + id)
+                        .then(function (resp) {
+                            app.todoList.splice(index, 1);
+                        })
+                        .catch(function (resp) {
+                            alert("Could not delete company");
+                        });
+                }
+            }
         }
     }
 </script>

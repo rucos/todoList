@@ -45922,6 +45922,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -45934,12 +45935,22 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         axios.get('/api/v1/todoList').then(function (resp) {
             app.todoList = resp.data;
         }).catch(function (resp) {
-            console.log(resp);
             alert("Could not load task");
         });
     },
 
-    methods: {}
+    methods: {
+        deleteCurrentRow: function deleteCurrentRow(id, index) {
+            if (confirm("Do you really want to delete it?")) {
+                var app = this;
+                axios.delete('/api/v1/todoList/' + id).then(function (resp) {
+                    app.todoList.splice(index, 1);
+                }).catch(function (resp) {
+                    alert("Could not delete company");
+                });
+            }
+        }
+    }
 });
 
 /***/ }),
@@ -46006,7 +46017,12 @@ var render = function() {
                     "a",
                     {
                       staticClass: "btn btn-xs btn-danger",
-                      attrs: { href: "#" }
+                      attrs: { href: "#" },
+                      on: {
+                        click: function($event) {
+                          _vm.deleteCurrentRow(todoList.id, index)
+                        }
+                      }
                     },
                     [
                       _vm._v(
