@@ -45929,26 +45929,28 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
         return {
             todoList: [],
-            allList: [],
             searchStr: ''
         };
     },
     mounted: function mounted() {
-        var app = this;
-        axios.get('/api/v1/todoList').then(function (resp) {
-            app.todoList = resp.data;
-            app.allList = resp.data;
-        }).catch(function (resp) {
-            alert("Could not load task");
-        });
+        this.getTodoList();
     },
 
     methods: {
+        getTodoList: function getTodoList() {
+            var app = this;
+            axios.get('/api/v1/todoList').then(function (resp) {
+                app.todoList = resp.data;
+            }).catch(function (resp) {
+                alert("Could not load task");
+            });
+        },
         deleteCurrentRow: function deleteCurrentRow(id, index) {
             if (confirm("Do you really want to delete it?")) {
                 var app = this;
@@ -45959,20 +45961,22 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 });
             }
         },
-        onInputStrSearch: function onInputStrSearch() {
-            var str = this.searchStr;
-            if (!str) {
-                this.todoList = this.allList;
+        onClickStrSearch: function onClickStrSearch() {
+            if (!this.searchStr) {
+                this.getTodoList();
                 return;
             }
-
-            this.todoList = this.todoList.filter(function (el) {
-                return el.name.indexOf(str) != -1;
+            var app = this;
+            axios.get('/api/v1/todoList/find/' + this.searchStr).then(function (resp) {
+                app.todoList = resp.data;
+            }).catch(function (resp) {
+                console.log(resp);
+                alert("Could not edit");
             });
         },
         onClickResetBtn: function onClickResetBtn() {
             this.searchStr = '';
-            this.onInputStrSearch();
+            this.onClickStrSearch();
         },
         onChangeComlete: function onChangeComlete(id, index, complete) {
             this.todoList[index].complete = !complete;
@@ -46022,19 +46026,28 @@ var render = function() {
         attrs: { type: "text", placeholder: "Enter you search task" },
         domProps: { value: _vm.searchStr },
         on: {
-          input: [
-            function($event) {
-              if ($event.target.composing) {
-                return
-              }
-              _vm.searchStr = $event.target.value
-            },
-            function($event) {
-              _vm.onInputStrSearch()
+          input: function($event) {
+            if ($event.target.composing) {
+              return
             }
-          ]
+            _vm.searchStr = $event.target.value
+          }
         }
       }),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass: "btn btn-primary btn-sm",
+          attrs: { type: "button" },
+          on: {
+            click: function($event) {
+              _vm.onClickStrSearch()
+            }
+          }
+        },
+        [_vm._v("Find")]
+      ),
       _vm._v(" "),
       _c(
         "button",

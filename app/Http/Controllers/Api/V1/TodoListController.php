@@ -50,6 +50,14 @@ class TodoListController extends Controller
         return TodoList::findOrFail($id);
     }
 
+    public function findTodoList($str) {
+        if($str == false) {
+            return $this->index();
+        }
+        $query = TodoList::query();
+        return $query->where('name', 'like', $str.'%')->get();
+    }
+
     /**
      * Show the form for editing the specified resource.
      *

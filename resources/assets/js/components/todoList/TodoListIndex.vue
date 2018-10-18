@@ -4,7 +4,8 @@
             <router-link :to="{name: 'createTodoList'}" class="btn btn-success">Create</router-link>
         </div>
         <div class="form-group">
-            <input type="text" v-model="searchStr" placeholder="Enter you search task" v-on:input="onInputStrSearch()" />
+            <input type="text" v-model="searchStr" placeholder="Enter you search task" />
+            <button type="button" class="btn btn-primary btn-sm" v-on:click="onClickStrSearch()">Find</button>
             <button type="button" class="btn btn-info btn-sm" v-on:click="onClickResetBtn()">Reset</button>
         </div>
 
@@ -48,22 +49,23 @@
         data: function () {
             return {
                 todoList: [],
-                allList: [],
                 searchStr: ''
             }
         },
         mounted() {
-            let app = this;
-            axios.get('/api/v1/todoList')
-                .then(function (resp) {
-                    app.todoList = resp.data;
-                    app.allList = resp.data;
-                })
-                .catch(function (resp) {
-                    alert("Could not load task");
-                });
+            this.getTodoList();
         },
         methods: {
+            getTodoList() {
+                let app = this;
+                axios.get('/api/v1/todoList')
+                    .then(function (resp) {
+                        app.todoList = resp.data;
+                    })
+                    .catch(function (resp) {
+                        alert("Could not load task");
+                    });
+            },
             deleteCurrentRow(id, index) {
                 if (confirm("Do you really want to delete it?")) {
                     let app = this;
@@ -76,20 +78,24 @@
                         });
                 }
             },
-            onInputStrSearch() {
-                let str = this.searchStr;
-                if(!str) {
-                    this.todoList = this.allList;
+            onClickStrSearch() {
+                if(!this.searchStr) {
+                    this.getTodoList();
                     return;
                 }
-
-                this.todoList = this.todoList.filter(function(el) {
-                   return el.name.indexOf(str) != -1;
-                });
+                let app = this;
+                axios.get('/api/v1/todoList/find/' + this.searchStr)
+                    .then(function (resp) {
+                        app.todoList = resp.data;
+                    })
+                    .catch(function (resp) {
+                        console.log(resp);
+                        alert("Could not edit");
+                    });
             },
             onClickResetBtn() {
                 this.searchStr = '';
-                this.onInputStrSearch();
+                this.onClickStrSearch();
             },
             onChangeComlete(id, index, complete) {
                 this.todoList[index].complete = !complete;
