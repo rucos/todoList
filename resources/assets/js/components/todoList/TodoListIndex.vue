@@ -21,7 +21,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="todoList, index in todoList">
+                    <tr v-for="todoList, index in todoList" v-bind:class="{ success: todoList.complete }">
                         <td>{{ todoList.name }}</td>
                         <td>{{ todoList.date }}</td>
                         <td>

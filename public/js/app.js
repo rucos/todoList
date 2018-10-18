@@ -46071,7 +46071,7 @@ var render = function() {
         _c(
           "tbody",
           _vm._l(_vm.todoList, function(todoList, index) {
-            return _c("tr", [
+            return _c("tr", { class: { success: todoList.complete } }, [
               _c("td", [_vm._v(_vm._s(todoList.name))]),
               _vm._v(" "),
               _c("td", [_vm._v(_vm._s(todoList.date))]),
