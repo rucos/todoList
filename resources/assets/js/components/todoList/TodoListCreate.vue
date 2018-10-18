@@ -23,12 +23,13 @@
                     <div class="row">
                         <div class="col-xs-12 form-group">
                             <label class="control-label">Complete</label>
-                            <input type="checkbox" v-model="todoList.complete" class="form-control">
+                            <input type="checkbox" v-model="todoList.complete">
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-xs-12 form-group">
                             <button class="btn btn-success">Create</button>
+                            <router-link to="/" class="btn btn-default">Back</router-link>
                         </div>
                     </div>
                 </form>

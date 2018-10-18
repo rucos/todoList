@@ -5,12 +5,12 @@
         </div>
 
         <div class="panel panel-default">
-            <div class="panel-heading">Create new company</div>
+            <div class="panel-heading">Edit todo</div>
             <div class="panel-body">
                 <form v-on:submit="saveForm()">
                     <div class="row">
                         <div class="col-xs-12 form-group">
-                            <label class="control-label">Namr</label>
+                            <label class="control-label">Name</label>
                             <input type="text" v-model="todoList.name" class="form-control">
                         </div>
                     </div>
@@ -23,12 +23,13 @@
                     <div class="row">
                         <div class="col-xs-12 form-group">
                             <label class="control-label">Complete</label>
-                            <input type="checkbox" v-model="todoList.complete" class="form-control">
+                            <input type="checkbox" v-model="todoList.complete">
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-xs-12 form-group">
-                            <button class="btn btn-success">Create</button>
+                            <button class="btn btn-success">Edit</button>
+                            <router-link to="/" class="btn btn-default">Back</router-link>
                         </div>
                     </div>
                 </form>
@@ -63,7 +64,7 @@
         methods: {
             saveForm() {
                 event.preventDefault();
-                var app = this;
+                let app = this;
 
                 axios.patch('/api/v1/todoList/' + app.todoListId, app.todoList)
                     .then(function (resp) {

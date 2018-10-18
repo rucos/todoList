@@ -45923,17 +45923,26 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
         return {
-            todoList: []
+            todoList: [],
+            allList: [],
+            searchStr: ''
         };
     },
     mounted: function mounted() {
         var app = this;
         axios.get('/api/v1/todoList').then(function (resp) {
             app.todoList = resp.data;
+            app.allList = resp.data;
         }).catch(function (resp) {
             alert("Could not load task");
         });
@@ -45949,6 +45958,28 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     alert("Could not delete company");
                 });
             }
+        },
+        onInputStrSearch: function onInputStrSearch() {
+            var str = this.searchStr;
+            if (!str) {
+                this.todoList = this.allList;
+                return;
+            }
+
+            this.todoList = this.todoList.filter(function (el) {
+                return el.name.indexOf(str) != -1;
+            });
+        },
+        onClickResetBtn: function onClickResetBtn() {
+            this.searchStr = '';
+            this.onInputStrSearch();
+        },
+        onChangeComlete: function onChangeComlete(id, index, complete) {
+            this.todoList[index].complete = !complete;
+            axios.patch('/api/v1/todoList/' + id, this.todoList[index]).then(function (resp) {}).catch(function (resp) {
+                console.log(resp);
+                alert("Could not edit");
+            });
         }
     }
 });
@@ -45978,6 +46009,48 @@ var render = function() {
       1
     ),
     _vm._v(" "),
+    _c("div", { staticClass: "form-group" }, [
+      _c("input", {
+        directives: [
+          {
+            name: "model",
+            rawName: "v-model",
+            value: _vm.searchStr,
+            expression: "searchStr"
+          }
+        ],
+        attrs: { type: "text", placeholder: "Enter you search task" },
+        domProps: { value: _vm.searchStr },
+        on: {
+          input: [
+            function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.searchStr = $event.target.value
+            },
+            function($event) {
+              _vm.onInputStrSearch()
+            }
+          ]
+        }
+      }),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass: "btn btn-info btn-sm",
+          attrs: { type: "button" },
+          on: {
+            click: function($event) {
+              _vm.onClickResetBtn()
+            }
+          }
+        },
+        [_vm._v("Reset")]
+      )
+    ]),
+    _vm._v(" "),
     _c("div", { staticClass: "panel panel-default" }, [
       _c("table", { staticClass: "table table-bordered table-striped" }, [
         _vm._m(0),
@@ -45990,7 +46063,51 @@ var render = function() {
               _vm._v(" "),
               _c("td", [_vm._v(_vm._s(todoList.date))]),
               _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(todoList.complete))]),
+              _c("td", [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: todoList.complete,
+                      expression: "todoList.complete"
+                    }
+                  ],
+                  attrs: { type: "checkbox" },
+                  domProps: {
+                    checked: Array.isArray(todoList.complete)
+                      ? _vm._i(todoList.complete, null) > -1
+                      : todoList.complete
+                  },
+                  on: {
+                    input: function($event) {
+                      _vm.onChangeComlete(todoList.id, index, todoList.complete)
+                    },
+                    change: function($event) {
+                      var $$a = todoList.complete,
+                        $$el = $event.target,
+                        $$c = $$el.checked ? true : false
+                      if (Array.isArray($$a)) {
+                        var $$v = null,
+                          $$i = _vm._i($$a, $$v)
+                        if ($$el.checked) {
+                          $$i < 0 &&
+                            _vm.$set(todoList, "complete", $$a.concat([$$v]))
+                        } else {
+                          $$i > -1 &&
+                            _vm.$set(
+                              todoList,
+                              "complete",
+                              $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                            )
+                        }
+                      } else {
+                        _vm.$set(todoList, "complete", $$c)
+                      }
+                    }
+                  }
+                })
+              ]),
               _vm._v(" "),
               _c(
                 "td",
@@ -46008,7 +46125,7 @@ var render = function() {
                     },
                     [
                       _vm._v(
-                        "\n                        Edit\n                    "
+                        "\n                            Edit\n                        "
                       )
                     ]
                   ),
@@ -46026,7 +46143,7 @@ var render = function() {
                     },
                     [
                       _vm._v(
-                        "\n                        Delete\n                    "
+                        "\n                            Delete\n                        "
                       )
                     ]
                   )
@@ -46120,6 +46237,7 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
 //
 //
 //
@@ -46292,7 +46410,6 @@ var render = function() {
                       expression: "todoList.complete"
                     }
                   ],
-                  staticClass: "form-control",
                   attrs: { type: "checkbox" },
                   domProps: {
                     checked: Array.isArray(_vm.todoList.complete)
@@ -46331,25 +46448,31 @@ var render = function() {
               ])
             ]),
             _vm._v(" "),
-            _vm._m(0)
+            _c("div", { staticClass: "row" }, [
+              _c(
+                "div",
+                { staticClass: "col-xs-12 form-group" },
+                [
+                  _c("button", { staticClass: "btn btn-success" }, [
+                    _vm._v("Create")
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "router-link",
+                    { staticClass: "btn btn-default", attrs: { to: "/" } },
+                    [_vm._v("Back")]
+                  )
+                ],
+                1
+              )
+            ])
           ]
         )
       ])
     ])
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "row" }, [
-      _c("div", { staticClass: "col-xs-12 form-group" }, [
-        _c("button", { staticClass: "btn btn-success" }, [_vm._v("Create")])
-      ])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
@@ -46450,6 +46573,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     mounted: function mounted() {
@@ -46511,9 +46635,7 @@ var render = function() {
     ),
     _vm._v(" "),
     _c("div", { staticClass: "panel panel-default" }, [
-      _c("div", { staticClass: "panel-heading" }, [
-        _vm._v("Create new company")
-      ]),
+      _c("div", { staticClass: "panel-heading" }, [_vm._v("Edit todo")]),
       _vm._v(" "),
       _c("div", { staticClass: "panel-body" }, [
         _c(
@@ -46528,7 +46650,7 @@ var render = function() {
           [
             _c("div", { staticClass: "row" }, [
               _c("div", { staticClass: "col-xs-12 form-group" }, [
-                _c("label", { staticClass: "control-label" }, [_vm._v("Namr")]),
+                _c("label", { staticClass: "control-label" }, [_vm._v("Name")]),
                 _vm._v(" "),
                 _c("input", {
                   directives: [
@@ -46597,7 +46719,6 @@ var render = function() {
                       expression: "todoList.complete"
                     }
                   ],
-                  staticClass: "form-control",
                   attrs: { type: "checkbox" },
                   domProps: {
                     checked: Array.isArray(_vm.todoList.complete)
@@ -46636,25 +46757,31 @@ var render = function() {
               ])
             ]),
             _vm._v(" "),
-            _vm._m(0)
+            _c("div", { staticClass: "row" }, [
+              _c(
+                "div",
+                { staticClass: "col-xs-12 form-group" },
+                [
+                  _c("button", { staticClass: "btn btn-success" }, [
+                    _vm._v("Edit")
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "router-link",
+                    { staticClass: "btn btn-default", attrs: { to: "/" } },
+                    [_vm._v("Back")]
+                  )
+                ],
+                1
+              )
+            ])
           ]
         )
       ])
     ])
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "row" }, [
-      _c("div", { staticClass: "col-xs-12 form-group" }, [
-        _c("button", { staticClass: "btn btn-success" }, [_vm._v("Create")])
-      ])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
