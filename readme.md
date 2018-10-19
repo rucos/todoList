@@ -1,3 +1,12 @@
+Установка:
+- git clone
+- composer install/update
+- переименовать .env.example -> .env
+- указываем настройки соединения с базой в .env и генерируем ключ php artisan key:generate
+- миграция: php artisan migrate
+- npm install && npm install vue-router
+- запуск сервера php artisan serve
+
 <p align="center"><img src="https://laravel.com/assets/img/components/logo-laravel.svg"></p>
 
 <p align="center">
